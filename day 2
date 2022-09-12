@@ -1,0 +1,2 @@
+We use and , or and invert (&,|,~) operations for bit masking and bit manipuilation .
+we can find set and clear bits using bit masking
