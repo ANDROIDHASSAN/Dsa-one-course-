@@ -1,0 +1,231 @@
+Problem :
+
+Given an array of size N-1 such that it only contains distinct integers in the range of 1 to N. Find the missing element.
+
+Example 1:
+
+Input:
+N = 5
+A[] = {1,2,3,5}
+Output: 4
+Example 2:
+
+Input:
+N = 10
+A[] = {6,1,2,8,3,4,7,10,5}
+Output: 9
+
+Your Task :
+You don't need to read input or print anything. Complete the function MissingNumber() that takes array and N as input  parameters and returns the value of the missing number.
+
+
+Expected Time Complexity: O(N)
+Expected Auxiliary Space: O(1)
+
+
+Constraints:
+1 ≤ N ≤ 106
+1 ≤ A[i] ≤ 106
+
+
+Solution :
+
+Approach 1 (Using summation of first N natural numbers): The idea behind the approach is to use the summation of the first N numbers.
+
+Find the sum of the numbers in the range [1, N] using the formula N * (N+1)/2. Now find the sum of all the elements in the array and subtract it from the sum of the first N natural numbers. This will give the value of the missing element.
+
+Follow the steps mentioned below to implement the idea:
+
+Calculate the sum of the first N natural numbers as sumtotal= N*(N+1)/2.
+Traverse the array from start to end.
+Find the sum of all the array elements.
+Print the missing number as SumTotal - sum of array
+Below is the implementation of the above approach:
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to get the missing number
+int getMissingNo(int a[], int n)
+{
+    // Given the range of elements
+    // are 1 more than the size of array
+    int N = n + 1;
+  
+    int total = (N) * (N + 1) / 2;
+    for (int i = 0; i < n; i++)
+        total -= a[i];
+    return total;
+}
+
+// Driver Code
+int main()
+{
+    int arr[] = { 1, 2, 3, 5 };
+    int N = sizeof(arr) / sizeof(arr[0]);
+  
+    // Function call
+    int miss = getMissingNo(arr, N);
+    cout << miss;
+    return 0;
+}
+
+Modification for Overflow: The approach remains the same but there can be an overflow if N is large. 
+
+In order to avoid integer overflow, pick one number from the range [1, N] and subtract a number from the given array (don't subtract the same number twice). This way there won't be any integer overflow.
+
+Algorithm: 
+
+Create a variable sum = 1 which will store the missing number and a counter variable c = 2.
+Traverse the array from start to end.
+Update the value of sum as sum = sum - array[i] + c and increment c by 1. This performs the task mentioned in the above idea]
+Print the missing number as a sum.
+Below is the implementation of the above approach:
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to get the missing element
+int getMissingNo(int a[], int n)
+{
+    int i, total = 1;
+
+    for (i = 2; i <= (n + 1); i++) {
+        total += i;
+        total -= a[i - 2];
+    }
+    return total;
+}
+
+// Driver Program
+int main()
+{
+    int arr[] = { 1, 2, 3, 5 };
+    int N = sizeof(arr) / sizeof(arr[0]);
+  
+    // Function call
+    cout << getMissingNo(arr, N);
+    return 0;
+}
+
+// This code is contributed by Aditya Kumar (adityakumar129)
+
+Output
+4
+Time Complexity: O(N).  Only one traversal of the array is needed.
+Auxiliary Space: O(1). No extra space is needed
+
+Approach 2 (Using binary operations): This method uses the technique of XOR to solve the problem.  
+
+XOR has certain properties 
+
+Assume a1 ⊕ a2 ⊕ a3 ⊕ . . . ⊕ an = a and a1 ⊕ a2 ⊕ a3 ⊕ . . . ⊕ an-1 = b
+Then a ⊕ b = an
+Follow the steps mentioned below to implement the idea:
+
+Create two variables a = 0 and b = 0
+Run a loop from i = 1 to N:
+For every index, update a as a = a ^ i
+Now traverse the array from i = start to end.
+For every index, update b as b = b ^ arr[i].
+The missing number is a ^ b.
+Below is the implementation of the above approach:
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to get the missing number
+int getMissingNo(int a[], int n)
+{
+    // For xor of all the elements in array
+    int x1 = a[0];
+
+    // For xor of all the elements from 1 to n+1
+    int x2 = 1;
+
+    for (int i = 1; i < n; i++)
+        x1 = x1 ^ a[i];
+
+    for (int i = 2; i <= n + 1; i++)
+        x2 = x2 ^ i;
+
+    return (x1 ^ x2);
+}
+
+// Driver Code
+int main()
+{
+    int arr[] = { 1, 2, 3, 5 };
+    int N = sizeof(arr) / sizeof(arr[0]);
+  
+    // Function call
+    int miss = getMissingNo(arr, N);
+    cout << miss;
+    return 0;
+}
+
+Output
+4
+Time Complexity: O(N) 
+Auxiliary Space: O(1) 
+
+Approach 3 (Using Cyclic Sort): The idea behind it is as follows:
+
+All the given array numbers are sorted and in the range of 1 to n-1. If the range is 1 to N  then the index of every array element will be the same as (value - 1).
+
+Follow the below steps to implement the idea:
+
+Use cyclic sort to sort the elements in linear time.
+Now traverse from i = 0 to the end of the array:
+If arr[i] is not the same as i+1 then the missing element is (i+1).
+If all elements are present then N is the missing element in the range [1, N].
+Below is the implementation of the above approach.
+
+// C++ program to find the missing Number\
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to find the missing number
+int getMissingNo(int a[], int n)
+{
+    int i = 0;
+    while (i < n) {
+        int correct = a[i] - 1;
+        if (a[i] < n && a[i] != a[correct]) {
+            swap(a[i], a[correct]);
+        }
+        else {
+            i++;
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (i != a[i] - 1) {
+            return i + 1;
+        }
+    }
+
+    return n;
+}
+
+// Driver code
+int main()
+{
+    int arr[] = { 1, 2, 3, 5 };
+    int N = sizeof(arr) / sizeof(arr[0]);
+  
+    // Function call
+    int miss = getMissingNo(arr, N);
+    cout << (miss);
+    return 0;
+}
+
+Output
+4
+Time Complexity: O(N), requires (N-1) comparisons
+Auxiliary Complexity: O(1) 
+
+Useful links to help you understand the concepts of this problem:
+
+https://www.geeksforgeeks.org/find-the-missing-number/
